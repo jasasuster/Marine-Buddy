@@ -18,7 +18,10 @@ def merge_data(marine_data, weather_data, location_names):
   return merged_data
 
 def save_merged_data(data_manager, merged_data):
-  for merged_data_object in merged_data:
+  for index, merged_data_object in enumerate(merged_data):
+    if index == 0:
+      data_manager.save_csv('processed', merged_data_object, 'current_data')
+      continue
     file_name = merged_data_object['location_name'].replace(' ', '_').lower()
     data_manager.save_csv('processed', merged_data_object, file_name)
 
