@@ -1,1 +1,17 @@
+.pytest_cache
+src/__pycache__
+tests/__pycache__
+src/data/__pycache__
+src/data/scripts/__pycache__
+
+src/client/node_modules
+src/client/.vscode
+
+src/client/node_modules/.package-lock.json
 /data
+/data-file.bin
+.env
+
+/models
+/notebooks
+/reports
