@@ -104,10 +104,10 @@ jobs:
         run: |
           poetry run dvc pull -r origin
 
-      - name: Fetch bike data
+      - name: Fetch marine data
         run: poetry run fetch_marine_data
 
-      - name: Preprocess bike data
+      - name: Preprocess marine data
         run: poetry run preprocess_marine_data
 
       - name: Fetch weather data
