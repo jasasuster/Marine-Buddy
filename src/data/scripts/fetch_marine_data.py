@@ -12,8 +12,10 @@ def main():
 
   marine_data = data_fetcher.get_marine_data()
   timestamp = marine_data[0]['current']['time']
-  
+
   data_manager.save_json(marine_data, 'fetched', timestamp)
+
+  print(f'Marine data fetched and saved to {os.path.join("data", "raw", "marine", f"fetched_data_{timestamp}.json")}')
 
 if __name__ == "__main__":
   main()

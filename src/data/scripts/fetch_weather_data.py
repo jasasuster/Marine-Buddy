@@ -15,5 +15,7 @@ def main():
 
   data_manager.save_json(weather_data, 'fetched', timestamp)
 
+  print(f'Weather data fetched and saved to {os.path.join("data", "raw", "weather", f"fetched_data_{timestamp}.json")}')
+
 if __name__ == "__main__":
   main()

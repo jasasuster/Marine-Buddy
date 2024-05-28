@@ -30,6 +30,8 @@ def main():
   weather_data, timestamp = data_manager.get_latest_json_and_timestamp(os.path.join('raw', 'weather'), 'fetched')
   preprocessed_weather_data = preprocess_weather_data(weather_data)
   data_manager.save_json(preprocessed_weather_data, 'preprocessed', timestamp, os.path.join('preprocessed', 'weather'))
+  
+  print(f'Weather data preprocessed and saved to {os.path.join("data", "preprocessed", "weather", f"preprocessed_data_{timestamp}.json")}')
 
 if __name__ == "__main__":
   main()

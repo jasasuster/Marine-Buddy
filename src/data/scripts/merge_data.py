@@ -35,3 +35,4 @@ def main():
   else:
     merged_data = merge_data(marine_data, weather_data, location_names)
     save_merged_data(data_manager, merged_data)
+    print(f'Merged data saved to {os.path.join("data", "processed")}')

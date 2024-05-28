@@ -7,8 +7,8 @@ class DataManager:
   def __init__(self, data_path):
     self.data_path = data_path
 
-  def _get_timestamp(self, file_name):
-    match = re.search(r'fetched_data_(\d+)', file_name)
+  def _get_timestamp(self, file_name, data_type = 'fetched'):
+    match = re.search(data_type + r'_data_(\d+)', file_name)
     if match:
       return int(match.group(1))
     return None
@@ -60,11 +60,11 @@ class DataManager:
     if not matching_files:
       return None
 
-    matching_files.sort(key=lambda x: self._get_timestamp(x))
+    matching_files.sort(key=lambda x: self._get_timestamp(x, data_type))
 
     last_file = matching_files[-1]
     if last_file:
       file_path = os.path.join(files_path, last_file)
       with open(file_path, 'r') as file:
-        return json.load(file) , self._get_timestamp(last_file)
+        return json.load(file) , self._get_timestamp(last_file, data_type)
     return None
