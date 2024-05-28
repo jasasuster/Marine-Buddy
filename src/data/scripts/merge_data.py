@@ -35,5 +35,3 @@ def main():
   else:
     merged_data = merge_data(marine_data, weather_data, location_names)
     save_merged_data(data_manager, merged_data)
-
-  # data_manager.save_json(os.path.join('merged'), merged_data, 'merged', marine_timestamp)

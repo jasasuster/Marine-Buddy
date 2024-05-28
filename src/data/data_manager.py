@@ -13,7 +13,7 @@ class DataManager:
       return int(match.group(1))
     return None
 
-  def save_json(self, additional_path, data, data_type, timestamp):
+  def save_json(self, data, data_type, timestamp, additional_path = ''):
     save_path = os.path.join(self.data_path, additional_path)
     os.makedirs(save_path, exist_ok=True)
     raw_output_file_path = os.path.join(save_path, f'{data_type}_data_{timestamp}.json')
