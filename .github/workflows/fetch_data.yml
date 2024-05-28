@@ -187,10 +187,6 @@ jobs:
         run: |
           poetry run dvc pull -r origin
 
-      - name: Unprotect
-        run: |
-          poetry run dvc unprotect data
-
       - name: Run data validation
         run: |
           poetry run validate_data
@@ -203,3 +199,87 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  test_and_merge_data:
+    needs: validate_data
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: cache poetry install
+        uses: actions/cache@v2
+        with:
+          path: ~/.local
+          key: poetry-1.8.2
+
+      - uses: snok/install-poetry@v1
+        with:
+          version: 1.8.2
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: cache deps
+        id: cache-deps
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: pydeps-${{ hashFiles('**/poetry.lock') }}
+
+      - run: poetry install --no-interaction --no-root
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+
+      - run: poetry install --no-interaction
+
+      - name: Setup DVC
+        uses: iterative/setup-dvc@v1
+        with:
+          version: '3.48.4'
+
+      - name: Setup Dagshub
+        run: |
+          poetry run dvc remote modify origin endpointurl https://dagshub.com/jasasuster/Marine-Buddy.s3
+          poetry run dvc remote modify origin --local access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          poetry run dvc remote modify origin --local secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Pull data
+        run: |
+          poetry run dvc pull -r origin
+
+      - name: Test data
+        run: |
+          poetry run test_data
+
+      - name: Data drift
+        run: |
+          poetry run data_drift
+
+      - name: Merge validated data
+        run: |
+          cp data/processed/current_data.csv data/processed/sea_point_1.csv
+
+      - name: Split data
+        run: |
+          poetry run split_data
+
+      - name: Add data to DVC
+        run: |
+          poetry run dvc add data
+
+      - name: DVC push
+        run: |
+          poetry run dvc push -r origin
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Validate data

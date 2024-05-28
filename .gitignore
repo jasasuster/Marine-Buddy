@@ -2,6 +2,7 @@
 src/__pycache__
 tests/__pycache__
 src/data/__pycache__
+src/validation/__pycache__
 src/data/scripts/__pycache__
 
 src/client/node_modules
@@ -14,4 +15,3 @@ src/client/node_modules/.package-lock.json
 
 /models
 /notebooks
-/reports
