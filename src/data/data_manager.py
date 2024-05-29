@@ -3,6 +3,8 @@ import re
 import csv
 import json
 
+import pandas as pd
+
 class DataManager:
   def __init__(self, data_path):
     self.data_path = data_path
@@ -68,3 +70,7 @@ class DataManager:
       with open(file_path, 'r') as file:
         return json.load(file) , self._get_timestamp(last_file, data_type)
     return None
+  
+  def get_dataframe(self, file_name, additional_path = ''):
+    file_path = os.path.join(self.data_path, additional_path, f'{file_name}.csv')
+    return pd.read_csv(file_path)
