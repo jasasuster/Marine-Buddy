@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 from tensorflow.keras import Input
 from tensorflow.keras.models import Sequential
@@ -29,9 +30,9 @@ def build_model(input_shape):
 
   return model
 
-def train_model(model, X_train, y_train, epochs, batch_size=32):
+def train_model(model, sea_point_number, X_train, y_train, epochs, batch_size=32):
   model_history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.2, verbose=1)
-  plot_model_history(model_history)
+  plot_model_history(model_history, sea_point_number)
 
 def evaluate_model():
   pass
@@ -42,8 +43,8 @@ def get_data(sea_point_number, data_type):
   return df
 
 def scale_data(train, test, wave_scaler, other_scaler):
-  train_wave, test_wave = train['wave_height'].values, test['wave_height'].values
-  train_other, test_other = train.drop(columns=['wave_height']).values, test.drop(columns=['wave_height']).values
+  train_wave, test_wave = np.array(train[:,0]), np.array(test[:,0])
+  train_other, test_other = np.array(train[:,1:]), np.array(test[:,1:])
 
   train_wave = wave_scaler.fit_transform(train_wave.reshape(-1, 1))
   test_wave = wave_scaler.transform(test_wave.reshape(-1, 1))
@@ -56,7 +57,7 @@ def scale_data(train, test, wave_scaler, other_scaler):
 
   return train_scaled, test_scaled
 
-def create_time_series(df, window_size=24):
+def create_time_series(df, window_size=2):
   X, y = [], []
   for i in range(len(df) - window_size):
       window = df[i:i+window_size, :]
@@ -66,16 +67,17 @@ def create_time_series(df, window_size=24):
   return np.array(X), np.array(y)
 
 def prepare_data(df, wave_scaler, other_scaler):
-  df.drop(columns=['latitude', 'longitude', 'elevation', 'location_id', 'location_name'], inplace=True)
-  # df['date'] = pd.to_datetime(df['timestamp'], unit='ms')
-  # df.drop(columns=['timestamp'], inplace=True)
+  df.drop(columns=['latitude', 'longitude', 'elevation', 'location_name'], inplace=True)
+  df = df.sort_values(by='timestamp')
   df.set_index('timestamp', inplace=True)
-  df = df.resample('h').mean()
   df.reset_index(inplace=True)
   df.dropna(inplace=True)
 
-  train_size = len(df) - (len(df) // 5)
-  train, test = df[:train_size], df[train_size:]
+  df_multi = df[['wave_height','temperature_2m','wind_speed_10m','wind_direction_10m','relative_humidity_2m','dew_point_2m','apparent_temperature','precipitation_probability','rain','surface_pressure']]
+  multi_array = df_multi.values
+
+  train_size = len(multi_array) - (len(multi_array) // 5)
+  train, test = multi_array[:train_size], multi_array[train_size:]
 
   train_scaled, test_scaled = scale_data(train, test, wave_scaler, other_scaler)
   X_train, y_train = create_time_series(train_scaled)

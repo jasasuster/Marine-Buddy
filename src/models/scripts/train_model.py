@@ -74,7 +74,7 @@ def train(sea_point_number):
   epochs = 15
   batch_size = 32
 
-  train_model(model, X_train, y_train, epochs, batch_size)
+  train_model(model, sea_point_number, X_train, y_train, epochs, batch_size)
 
   mlflow.log_param("epochs", 15)
   mlflow.log_param("batch_size", 32)
@@ -93,4 +93,5 @@ def main():
   mlflow.set_tracking_uri(settings.MLFLOW_TRACKING_URI)
 
   for sea_point_number in range(1, 10):
+    print(f"Training model for sea point {sea_point_number}...")
     train(sea_point_number)
