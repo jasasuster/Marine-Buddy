@@ -15,9 +15,13 @@ def download_latest_model_onnx(sea_point_number, stage):
     client = mlflow.MlflowClient()
     model = load_onnx( client.get_latest_versions(name=model_name, stages=[stage])[0].source)
 
-    onnx.save_model(model, f"./models/{sea_point_number}/model_{stage}.onnx")
+    model_save_path = f"./models/{sea_point_number}/"
+    os.makedirs(model_save_path, exist_ok=True)
 
-    return f"./models/{sea_point_number}/model_{stage}.onnx"
+    saved_model_path = f"./models/{sea_point_number}/model_{stage}.onnx"
+    onnx.save_model(model, saved_model_path)
+
+    return saved_model_path
   except IndexError:
     print(f"Error downloading {stage}, {model_name}")
     return None
