@@ -56,7 +56,7 @@ def download_all_models():
   mlflow.set_tracking_uri(settings.MLFLOW_TRACKING_URI)
 
   try:
-    for i in range(1, 10):
+    for i in range(1, 11):
         sea_point_dir = f"models/{i}/"
         os.makedirs(sea_point_dir, exist_ok=True)
         model = download_latest_model_onnx(str(i), "production")

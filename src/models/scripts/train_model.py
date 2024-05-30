@@ -92,6 +92,6 @@ def main():
   dagshub.init("Marine-Buddy", settings.MLFLOW_TRACKING_USERNAME, mlflow=True)
   mlflow.set_tracking_uri(settings.MLFLOW_TRACKING_URI)
 
-  for sea_point_number in range(1, 10):
+  for sea_point_number in range(1, 11):
     print(f"Training model for sea point {sea_point_number}...")
     train(sea_point_number)
