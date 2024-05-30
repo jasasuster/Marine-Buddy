@@ -67,7 +67,6 @@ def create_time_series(df, window_size=2):
   return np.array(X), np.array(y)
 
 def prepare_data(df, wave_scaler, other_scaler):
-  df.drop(columns=['latitude', 'longitude', 'elevation', 'location_name'], inplace=True)
   df = df.sort_values(by='timestamp')
   df.set_index('timestamp', inplace=True)
   df.reset_index(inplace=True)
@@ -87,3 +86,31 @@ def prepare_data(df, wave_scaler, other_scaler):
   X_test = X_test.reshape(X_test.shape[0], test_scaled.shape[1], X_test.shape[1])
 
   return X_train, y_train, X_test, y_test
+
+def prepare_evaluation_data(df, wave_scaler, other_scaler, prod_wave_scaler, prod_other_scaler):
+  df = df.sort_values(by='timestamp')
+  df.set_index('timestamp', inplace=True)
+  df.reset_index(inplace=True)
+  df.dropna(inplace=True)
+
+  df_multi = df[['wave_height','temperature_2m','wind_speed_10m','wind_direction_10m','relative_humidity_2m','dew_point_2m','apparent_temperature','precipitation_probability','rain','surface_pressure']]
+  multi_array = df_multi.values
+
+  target_feature = multi_array[:,0]
+  target_feature_normalized = wave_scaler.transform(target_feature.reshape(-1, 1))
+  production_target_feature_normalized = prod_wave_scaler.transform(target_feature.reshape(-1, 1))
+
+  other_features = multi_array[:,1:]
+  other_features_normalized = other_scaler.transform(other_features)
+  production_other_features_normalized = prod_other_scaler.transform(other_features)
+
+  multi_array_scaled = np.column_stack([target_feature_normalized, other_features_normalized])
+  production_multi_array_scaled = np.column_stack([production_target_feature_normalized, production_other_features_normalized])
+
+  X_final, y_final = create_time_series(multi_array_scaled)
+  production_X_final, production_y_final = create_time_series(production_multi_array_scaled)
+
+  X_final = X_final.reshape(X_final.shape[0], multi_array_scaled.shape[1], X_final.shape[1])
+  production_X_final = production_X_final.reshape(production_X_final.shape[0], production_multi_array_scaled.shape[1], production_X_final.shape[1])
+
+  return X_final, y_final, production_X_final, production_y_final

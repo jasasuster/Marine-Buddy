@@ -52,3 +52,4 @@ test_data = "src.validation.test_data:main"
 data_drift = "src.validation.data_drift:main"
 
 train_model = "src.models.scripts.train_model:main"
+validate_predictions = "src.models.scripts.validate_predictions:main"
