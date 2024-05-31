@@ -6,6 +6,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import GRU, Dense, Dropout
 from tensorflow_model_optimization.quantization.keras import quantize_annotate_layer, quantize_apply
 
+import src.settings as settings
 from src.data.data_manager import DataManager
 from src.visualization.visualization import plot_model_history
 
@@ -54,7 +55,7 @@ def scale_data(train, test, wave_scaler, other_scaler):
 
   return train_scaled, test_scaled
 
-def create_time_series(df, window_size=2):
+def create_time_series(df, window_size=5):
   X, y = [], []
   for i in range(len(df) - window_size):
       window = df[i:i+window_size, :]
@@ -76,15 +77,15 @@ def prepare_data(df, wave_scaler, other_scaler):
   train, test = multi_array[:train_size], multi_array[train_size:]
 
   train_scaled, test_scaled = scale_data(train, test, wave_scaler, other_scaler)
-  X_train, y_train = create_time_series(train_scaled)
-  X_test, y_test = create_time_series(test_scaled)
+  X_train, y_train = create_time_series(train_scaled, settings.window_size)
+  X_test, y_test = create_time_series(test_scaled, settings.window_size)
 
   X_train = X_train.reshape(X_train.shape[0], train_scaled.shape[1], X_train.shape[1])
   X_test = X_test.reshape(X_test.shape[0], test_scaled.shape[1], X_test.shape[1])
 
   return X_train, y_train, X_test, y_test
 
-def prepare_predict_data(df, wave_scaler, other_scaler):
+def prepare_evaluate_data(df, wave_scaler, other_scaler):
   df = df.sort_values(by='timestamp')
   df.set_index('timestamp', inplace=True)
   df.reset_index(inplace=True)
@@ -101,8 +102,25 @@ def prepare_predict_data(df, wave_scaler, other_scaler):
 
   multi_array_scaled = np.column_stack([target_feature_normalized, other_features_normalized])
 
-  X_final, y_final = create_time_series(multi_array_scaled)
+  X_final, y_final = create_time_series(multi_array_scaled, settings.window_size)
 
   X_final = X_final.reshape(X_final.shape[0], multi_array_scaled.shape[1], X_final.shape[1])
 
   return X_final, y_final
+
+def prepare_predict_data(df, wave_scaler, other_scaler):
+  df = df.sort_values(by='timestamp')
+
+  df_multi = df[['wave_height', 'temperature_2m','wind_speed_10m','wind_direction_10m','relative_humidity_2m','dew_point_2m','apparent_temperature','precipitation_probability','rain','surface_pressure']]
+  multi_array = df_multi.values
+
+  wave_feature = multi_array[:,0]
+  other_features = multi_array[:,1:]
+
+  wave_feature = wave_scaler.transform(wave_feature.reshape(-1, 1))
+  other_features = other_scaler.transform(other_features)
+
+  multi_array = np.column_stack([wave_feature, other_features])
+  multi_array = multi_array.reshape(1, multi_array.shape[1], multi_array.shape[0])
+
+  return multi_array

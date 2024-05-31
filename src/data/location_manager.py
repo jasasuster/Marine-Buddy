@@ -13,10 +13,10 @@ class LocationManager:
   def get_location_names(self):
     return [location['name'] for location in self.locations]
   
-  def get_location_by_name(self, location_name):
+  def get_location_coordinates(self, sea_point_number):
     for location in self.locations:
-      if location['name'] == location_name:
-        return location
+      if location['name'] == f'Sea Point {sea_point_number}':
+        return location['coordinates']['latitude'], location['coordinates']['longitude']
     return None
 
   def get_coordinates(self, location_name):

@@ -61,14 +61,15 @@ def download_all_models():
 
   try:
     for i in range(1, 11):
-        sea_point_dir = f"models/{i}/"
-        os.makedirs(sea_point_dir, exist_ok=True)
-        model = download_latest_model_onnx(str(i), "production")
-        wave_scaler = download_latest_scaler(str(i), "wave_scaler", "production")
-        other_scaler = download_latest_scaler(str(i), "other_scaler", "production")
+      print(f"------------------- downloading model and scalers for point {i} -------------------")
+      sea_point_dir = f"models/{i}/"
+      os.makedirs(sea_point_dir, exist_ok=True)
+      model = download_latest_model_onnx(str(i), "production")
+      wave_scaler = download_latest_scaler(str(i), "wave_scaler", "production")
+      other_scaler = download_latest_scaler(str(i), "other_scaler", "production")
 
-        joblib.dump(wave_scaler, os.path.join(sea_point_dir, 'wave_scaler.joblib'))
-        joblib.dump(other_scaler, os.path.join(sea_point_dir, 'other_scaler.joblib'))
+      joblib.dump(wave_scaler, os.path.join(sea_point_dir, 'wave_scaler.joblib'))
+      joblib.dump(other_scaler, os.path.join(sea_point_dir, 'other_scaler.joblib'))
 
   except:
     print("Error getting models")

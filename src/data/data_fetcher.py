@@ -17,7 +17,7 @@ class DataFetcher:
       "longitude": self.coordinates[1],
       "hourly": self.weather_variables,
       "timezone": self.timezone,
-      "forecast_days": 1,
+      "forecast_days": 2,
       "timeformat": "unixtime"
     }
 

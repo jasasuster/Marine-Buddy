@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
 from datetime import datetime
 
@@ -10,14 +10,11 @@ def create_app():
   app = Flask(__name__)
   CORS(app)
 
-  @app.route('/mbajk/predict', methods=['POST'])
-  def predict_val():
+  @app.route('/wave/<int:sea_point_number>', methods=['POST'])
+  def predict_val(sea_point_number):
     try:
-      data = request.get_json()
-      station_number = data['station_number']
-      print(station_number)
-      predictions = predict(station_number)
-      insert_prediction(f"station_{station_number}", {'predictions': predictions, 'date': datetime.now()})
+      predictions = predict(sea_point_number)
+      insert_prediction(f"sea_point_{sea_point_number}", {'predictions': predictions, 'date': datetime.now()})
 
       return {'predictions': predictions}, 200
     except Exception as e:
