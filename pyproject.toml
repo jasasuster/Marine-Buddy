@@ -39,6 +39,8 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
+serve = "src.serve.api:main"
+
 fetch_marine_data = "src.data.scripts.fetch_marine_data:main"
 preprocess_marine_data = "src.data.scripts.preprocess_marine_data:main"
 

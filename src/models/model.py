@@ -34,9 +34,6 @@ def train_model(model, sea_point_number, X_train, y_train, epochs, batch_size=32
   model_history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.2, verbose=1)
   plot_model_history(model_history, sea_point_number)
 
-def evaluate_model():
-  pass
-
 def get_data(sea_point_number, data_type):
   data_manager = DataManager('data/processed/')
   df = data_manager.get_dataframe(f"sea_point_{sea_point_number}_{data_type}")
@@ -87,7 +84,7 @@ def prepare_data(df, wave_scaler, other_scaler):
 
   return X_train, y_train, X_test, y_test
 
-def prepare_evaluation_data(df, wave_scaler, other_scaler, prod_wave_scaler, prod_other_scaler):
+def prepare_predict_data(df, wave_scaler, other_scaler):
   df = df.sort_values(by='timestamp')
   df.set_index('timestamp', inplace=True)
   df.reset_index(inplace=True)
@@ -98,19 +95,14 @@ def prepare_evaluation_data(df, wave_scaler, other_scaler, prod_wave_scaler, pro
 
   target_feature = multi_array[:,0]
   target_feature_normalized = wave_scaler.transform(target_feature.reshape(-1, 1))
-  production_target_feature_normalized = prod_wave_scaler.transform(target_feature.reshape(-1, 1))
 
   other_features = multi_array[:,1:]
   other_features_normalized = other_scaler.transform(other_features)
-  production_other_features_normalized = prod_other_scaler.transform(other_features)
 
   multi_array_scaled = np.column_stack([target_feature_normalized, other_features_normalized])
-  production_multi_array_scaled = np.column_stack([production_target_feature_normalized, production_other_features_normalized])
 
   X_final, y_final = create_time_series(multi_array_scaled)
-  production_X_final, production_y_final = create_time_series(production_multi_array_scaled)
 
   X_final = X_final.reshape(X_final.shape[0], multi_array_scaled.shape[1], X_final.shape[1])
-  production_X_final = production_X_final.reshape(production_X_final.shape[0], production_multi_array_scaled.shape[1], production_X_final.shape[1])
 
-  return X_final, y_final, production_X_final, production_y_final
+  return X_final, y_final

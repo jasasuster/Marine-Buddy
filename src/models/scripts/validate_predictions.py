@@ -9,7 +9,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, explained_v
 
 import src.settings as settings
 import src.models.mlflow_client as mlflow_client
-from src.models.model import get_data, prepare_evaluation_data
+from src.models.model import get_data, prepare_predict_data
 
 def evaluate_model(sea_point_number):
   with mlflow.start_run(run_name=f"sea_point_{sea_point_number}", experiment_id="1", nested=True):
@@ -41,7 +41,8 @@ def evaluate_model(sea_point_number):
 
     df = get_data(sea_point_number, "test")
 
-    X_final, y_final, production_X_final, production_y_final = prepare_evaluation_data(df, loaded_wave_scaler, loaded_other_scaler, production_wave_scaler, production_other_scaler)
+    X_final, y_final = prepare_predict_data(df, loaded_wave_scaler, loaded_other_scaler)
+    production_X_final, production_y_final = prepare_predict_data(df, production_wave_scaler, production_other_scaler)
 
     y_pred = model.run(["output"], {"input":X_final})[0]
     y_test = loaded_wave_scaler.inverse_transform(y_final.reshape(-1, 1)).flatten()
