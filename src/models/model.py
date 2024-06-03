@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 
 from tensorflow.keras import Input
 from tensorflow.keras.models import Sequential
