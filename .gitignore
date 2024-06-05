@@ -8,5 +8,7 @@ src/client/node_modules/.package-lock.json
 /data-file.bin
 .env
 
+
 /models
 /notebooks
+/predicted_images

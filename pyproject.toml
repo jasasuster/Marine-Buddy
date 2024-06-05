@@ -29,6 +29,9 @@ onnxruntime = "^1.17.3"
 tf2onnx = "1.14.0"
 pymongo = "^4.7.2"
 tensorflow-model-optimization = "^0.8.0"
+huggingface-hub = "^0.23.2"
+transformers = "^4.41.2"
+pillow = "^10.3.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"

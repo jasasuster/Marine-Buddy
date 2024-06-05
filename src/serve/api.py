@@ -1,13 +1,15 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from datetime import datetime
 
+import os
+
 from src.models.scripts.predict_model import predict
 from src.models.mlflow_client import download_all_models
-from db.database_manager import DatabaseManager
-from src.models.trained_model import download_and_save_pretrained_model
+from src.db.database_manager import DatabaseManager
+from src.models.trained_model import get_classification_model, predict as predict_animal
 
-def create_app():
+def create_app(image_processor, image_model):
   app = Flask(__name__)
   database_manager = DatabaseManager()
   CORS(app)
@@ -25,19 +27,32 @@ def create_app():
   @app.route('/classification', methods=['POST'])
   def predict_classification():
     try:
-      predictions = ''
+      if 'image' not in request.files:
+        return {'error': 'No image found in request'}, 400
+      image = request.files['image']
+      if image.filename == '':
+        return {'error': 'No selected image'}, 400
+      if image:
+        prediction = predict_animal(image_processor, image_model, image)
+        if prediction is None:
+          return {'error': 'Error predicting image'}, 400
+        
+        if not os.path.isdir('predicted_images'):
+          os.mkdir('predicted_images')
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        image.save(f"predicted_images/{prediction}_{timestamp}.jpg")
 
-      return {'animal': predictions}, 200
+      return {'prediction': prediction}, 200
     except Exception as e:
       return {'error': str(e)}, 400
 
   return app
 
 def main():
-  app = create_app()
+  # download_all_models()
+  image_processor, image_model = get_classification_model()
 
-  download_all_models()
-  download_and_save_pretrained_model()
+  app = create_app(image_processor, image_model)
 
   app.run(host='0.0.0.0', port=3000)
 
