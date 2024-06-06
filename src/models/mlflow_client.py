@@ -3,6 +3,7 @@ import onnx
 import joblib
 import mlflow
 import dagshub
+import pandas as pd
 import src.settings as settings
 
 from mlflow.onnx import load_model as load_onnx
@@ -73,4 +74,64 @@ def download_all_models():
 
   except:
     print("Error getting models")
+    return None
+  
+def get_latest_model_metrics():
+  try:
+    client = mlflow.tracking.MlflowClient()
+    experiment_id = "1"
+    runs = client.search_runs(experiment_ids=experiment_id, order_by=["attributes.end_time desc"])
+    metrics_data_list = []
+
+    for run in runs:
+      metrics = run.data.metrics
+      if all([
+        metrics.get("EVS_production") is not None,
+        metrics.get("MAE_production") is not None,
+        metrics.get("MSE_production") is not None,
+        metrics.get("EVS_staging") is not None,
+        metrics.get("MAE_staging") is not None,
+        metrics.get("MSE_staging") is not None
+      ]):
+        metrics_data_list.append({
+          "run_id": run.info.run_id,
+          "end_time": pd.to_datetime(run.info.end_time, unit='ms').isoformat(),
+          "EVS_production": metrics.get("EVS_production"),
+          "MAE_production": metrics.get("MAE_production"),
+          "MSE_production": metrics.get("MSE_production"),
+          "EVS_staging": metrics.get("EVS_staging"),
+          "MAE_staging": metrics.get("MAE_staging"),
+          "MSE_staging": metrics.get("MSE_staging")
+        })
+
+    return metrics_data_list
+  except IndexError:
+    print("Error getting evaluation")
+    return None
+  
+def get_production_metrics():
+  try:
+    client = mlflow.tracking.MlflowClient()
+    experiment_id = "2"
+    runs = client.search_runs(experiment_ids=experiment_id, order_by=["attributes.end_time desc"])
+    metrics_data_list = []
+
+    for run in runs:
+      metrics = run.data.metrics
+      if all([
+        metrics.get("mse") is not None,
+        metrics.get("evs") is not None,
+        metrics.get("mae") is not None
+      ]):
+        metrics_data_list.append({
+          "run_id": run.info.run_id,
+          "end_time": pd.to_datetime(run.info.end_time, unit='ms').isoformat(),
+          "mse": metrics.get("mse"),
+          "evs": metrics.get("evs"),
+          "mae": metrics.get("mae")
+        })
+
+    return metrics_data_list
+  except IndexError:
+    print("Error getting evaluation")
     return None

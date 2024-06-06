@@ -1,5 +1,6 @@
 [
   {
+    "number": 1,
     "name": "Sea Point 1",
     "coordinates": {
       "latitude": 45.5929,
@@ -7,6 +8,7 @@
     }
   },
   {
+    "number": 2,
     "name": "Sea Point 2",
     "coordinates": {
       "latitude": 45.5607,
@@ -14,6 +16,7 @@
     }
   },
   {
+    "number": 3,
     "name": "Sea Point 3",
     "coordinates": {
       "latitude": 45.4184,
@@ -21,6 +24,7 @@
     }
   },
   {
+    "number": 4,
     "name": "Sea Point 4",
     "coordinates": {
       "latitude": 45.2849,
@@ -28,6 +32,7 @@
     }
   },
   {
+    "number": 5,
     "name": "Sea Point 5",
     "coordinates": {
       "latitude": 45.1805,
@@ -35,6 +40,7 @@
     }
   },
   {
+    "number": 6,
     "name": "Sea Point 6",
     "coordinates": {
       "latitude": 44.999,
@@ -42,6 +48,7 @@
     }
   },
   {
+    "number": 7,
     "name": "Sea Point 7",
     "coordinates": {
       "latitude": 45.122,
@@ -49,6 +56,7 @@
     }
   },
   {
+    "number": 8,
     "name": "Sea Point 8",
     "coordinates": {
       "latitude": 44.8085,
@@ -56,6 +64,7 @@
     }
   },
   {
+    "number": 9,
     "name": "Sea Point 9",
     "coordinates": {
       "latitude": 44.7525,
@@ -63,6 +72,7 @@
     }
   },
   {
+    "number": 10,
     "name": "Sea Point 10",
     "coordinates": {
       "latitude": 45.009,

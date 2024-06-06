@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 
 from src.models.scripts.predict_model import predict
-from src.models.mlflow_client import download_all_models
+from src.models.mlflow_client import download_all_models, get_latest_model_metrics, get_production_metrics
 from src.db.database_manager import DatabaseManager
 from src.models.trained_model import get_classification_model, predict as predict_animal
 
@@ -43,6 +43,22 @@ def create_app(image_processor, image_model):
         image.save(f"predicted_images/{prediction}_{timestamp}.jpg")
 
       return {'prediction': prediction}, 200
+    except Exception as e:
+      return {'error': str(e)}, 400
+    
+  @app.route('/evaluation', methods=['GET'])
+  def get_evaluation():
+    try:
+      metrics = get_latest_model_metrics()
+      return {'metrics': metrics}, 200
+    except Exception as e:
+      return {'error': str(e)}, 400
+    
+  @app.route('/production-evaluation', methods=['GET'])
+  def get_production_evaluation():
+    try:
+      metrics = database_manager.get_production_metrics()
+      return {'metrics': metrics}, 200
     except Exception as e:
       return {'error': str(e)}, 400
 
