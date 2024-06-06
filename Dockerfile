@@ -20,7 +20,6 @@ COPY poetry.lock pyproject.toml /app/
 
 RUN poetry install --no-interaction
 
-COPY models/ /app/models/
 COPY src/ /app/src/
 COPY data/ /app/data/
 
