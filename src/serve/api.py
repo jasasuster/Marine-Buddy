@@ -57,7 +57,7 @@ def create_app(image_processor, image_model):
   @app.route('/production-evaluation', methods=['GET'])
   def get_production_evaluation():
     try:
-      metrics = database_manager.get_production_metrics()
+      metrics = get_production_metrics()
       return {'metrics': metrics}, 200
     except Exception as e:
       return {'error': str(e)}, 400

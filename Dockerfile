@@ -20,6 +20,7 @@ COPY poetry.lock pyproject.toml /app/
 
 RUN poetry install --no-interaction
 
+COPY locations.json /app/locations.json
 COPY src/ /app/src/
 COPY data/ /app/data/
 
