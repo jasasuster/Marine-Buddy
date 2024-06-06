@@ -7,6 +7,8 @@ import Animals from './components/Animals';
 import Header from './components/Header';
 import AdminPanel from './components/AdminPanel';
 import DataQuality from './components/DataQuality';
+import Evaluation from './components/Evaluation';
+import ProductionEvaluation from './components/ProductionEvaluation';
 
 const routes = [
   { path: '/', element: <Home />, private: true },
@@ -15,6 +17,8 @@ const routes = [
   { path: '/animals', element: <Animals /> },
   { path: '/admin', element: <AdminPanel />, private: true },
   { path: '/admin/data-quality', element: <DataQuality />, private: true },
+  { path: '/admin/evaluation', element: <Evaluation />, private: true },
+  { path: '/admin/production-evaluation', element: <ProductionEvaluation />, private: true },
 ];
 
 function App() {

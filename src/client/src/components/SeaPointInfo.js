@@ -13,14 +13,9 @@ function SeaPointInfo() {
 
   useEffect(() => {
     fetch('../data/locations.json')
-      .then((res) => {
-        console.log('res', res);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log('data', data);
         const foundSeaPoint = data.find((s) => s.number === parsedSeaPointId);
-        console.log('foundSeaPoint', foundSeaPoint);
         setSeaPoint(foundSeaPoint);
       })
       .catch((err) => {
@@ -36,12 +31,8 @@ function SeaPointInfo() {
         setIsLoadingPredictions(false);
       } else {
         setIsLoadingPredictions(true);
-        fetch(`https://${process.env.REACT_APP_SERVE_URL}/wave/${seaPoint.number}`, {
+        fetch(`https://${process.env.REACT_APP_SERVE_URL}/wave/${seaPoint.number.toString()}`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ station_number: seaPoint.number }),
         })
           .then((res) => res.json())
           .then((data) => {
@@ -61,8 +52,14 @@ function SeaPointInfo() {
   function generateTimesArray(interval) {
     const result = [];
     const now = new Date();
-    // Round up to the next full hour
-    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0);
+    const start = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      now.getHours() + 1,
+      0,
+      0
+    );
     const end = new Date(start);
     end.setHours(start.getHours() + 7);
 
@@ -92,7 +89,6 @@ function SeaPointInfo() {
     };
 
     const jsonString = JSON.stringify(stationData);
-
     localStorage.setItem(`location-${stationNumber}`, jsonString);
   }
 
@@ -101,7 +97,6 @@ function SeaPointInfo() {
     if (storedData) {
       const stationData = JSON.parse(storedData);
       const now = new Date().getTime();
-      // Check if the stored data is less than 1 hour old
       if (now - stationData.timestamp < 60 * 60 * 1000) {
         return stationData.predictions;
       }
@@ -127,14 +122,19 @@ function SeaPointInfo() {
             <ul>
               {predictions.map((prediction, index) => (
                 <li key={index} className='text-gray-600'>
-                  {times[index]}: {prediction < 0 ? 0 : prediction > seaPoint.bike_stands ? seaPoint.bike_stands : prediction}
+                  {times[index]}:{' '}
+                  {prediction < 0
+                    ? 0
+                    : prediction > seaPoint.bike_stands
+                    ? seaPoint.bike_stands
+                    : prediction}
                 </li>
               ))}
             </ul>
           )}
         </div>
       )}
-      <Predictions seaPointNumber={seaPoint} />
+      {/* <Predictions seaPointNumber={seaPoint} /> */}
     </div>
   );
 }

@@ -3,24 +3,30 @@ import React, { useState } from 'react';
 function Animals() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [predictedAnimal, setPredictedAnimal] = useState(null);
+  const [isLoadingPredictions, setIsLoadingPredictions] = useState(false);
 
   const handleImageChange = (event) => {
-    setSelectedImage(URL.createObjectURL(event.target.files[0]));
+    const file = event.target.files[0];
+    setSelectedImage(file);
+    setPredictedAnimal(null);
   };
 
   const handleSubmit = () => {
     const formData = new FormData();
     formData.append('image', selectedImage);
+    setIsLoadingPredictions(true);
     fetch(`https://${process.env.REACT_APP_SERVE_URL}/classification`, {
       method: 'POST',
       body: formData,
     })
       .then((res) => res.json())
       .then((data) => {
+        setIsLoadingPredictions(false);
         setPredictedAnimal(data.prediction);
         console.log('data', data);
       })
       .catch((err) => {
+        setIsLoadingPredictions(false);
         console.error('Error fetching predictions', err);
       });
   };
@@ -31,7 +37,7 @@ function Animals() {
       <div className='flex'>
         <form>
           <input type='file' accept='image/*' onChange={handleImageChange} />
-          {selectedImage && <img src={selectedImage} alt='Selected' />}
+          {selectedImage && <img src={URL.createObjectURL(selectedImage)} alt='Selected' />}
           <br />
           <button
             type='button'
@@ -40,6 +46,7 @@ function Animals() {
           >
             Submit
           </button>
+          {isLoadingPredictions && <p>Loading predictions...</p>}
           {predictedAnimal && <p>Predicted animal: {predictedAnimal}</p>}
         </form>
       </div>

@@ -45,6 +45,22 @@ export default function Header() {
                   Data Quality
                 </Link>
               </li>
+              <li>
+                <Link
+                  to='/admin/evaluation'
+                  className='block mt-4 lg:inline-block lg:mt-0 text-white hover:underline hover:font-medium mr-4'
+                >
+                  Evaluation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to='/admin/production-evaluation'
+                  className='block mt-4 lg:inline-block lg:mt-0 text-white hover:underline hover:font-medium mr-4'
+                >
+                  Production Evaluation
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
