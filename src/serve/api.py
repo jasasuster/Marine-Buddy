@@ -49,7 +49,7 @@ def create_app(image_processor, image_model):
   return app
 
 def main():
-  # download_all_models()
+  download_all_models()
   image_processor, image_model = get_classification_model()
 
   app = create_app(image_processor, image_model)
