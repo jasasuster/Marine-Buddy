@@ -66,8 +66,11 @@ def download_all_models():
       sea_point_dir = f"models/{i}/"
       os.makedirs(sea_point_dir, exist_ok=True)
       model = download_latest_model_onnx(str(i), "production")
+      print(f"model for point {i} downloaded")
       wave_scaler = download_latest_scaler(str(i), "wave_scaler", "production")
+      print(f"wave scaler for point {i} downloaded")
       other_scaler = download_latest_scaler(str(i), "other_scaler", "production")
+      print(f"other scaler for point {i} downloaded")
 
       joblib.dump(wave_scaler, os.path.join(sea_point_dir, 'wave_scaler.joblib'))
       joblib.dump(other_scaler, os.path.join(sea_point_dir, 'other_scaler.joblib'))
