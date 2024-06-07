@@ -283,3 +283,12 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Validate data
+
+      - name: Deploy data test results to Netlify
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          publish-dir: 'reports/sites'
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_TEST_SITE_ID }}
