@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Header() {
+  const [isAdminDropdownOpen, setIsAdminDropdownOpen] = useState(false);
+
+  const toggleAdminDropdown = () => {
+    setIsAdminDropdownOpen(!isAdminDropdownOpen);
+  };
+
   return (
     <nav className='flex items-center justify-between flex-wrap bg-blue-800 bg-opacity-90 p-6'>
       <div className='flex items-center flex-shrink-0 text-white mr-6'>
@@ -15,53 +21,56 @@ export default function Header() {
             <Link
               to='/'
               className='block mt-4 lg:inline-block lg:mt-0 text-white hover:underline hover:font-medium mr-4'
+              onClick={() => setIsAdminDropdownOpen(false)}
             >
               List
             </Link>
-            {/* <Link
-              to='/map'
-              className='block mt-4 lg:inline-block lg:mt-0 text-white hover:underline hover:font-medium mr-4'
-            >
-              Map
-            </Link> */}
             <Link
               to='/animals'
               className='block mt-4 lg:inline-block lg:mt-0 text-white hover:underline hover:font-medium mr-4'
+              onClick={() => setIsAdminDropdownOpen(false)}
             >
               Predict Animals
             </Link>
-            <Link
-              to='/admin'
-              className='block mt-4 lg:inline-block lg:mt-0 text-white hover:underline hover:font-medium mr-4'
-            >
-              Admin Panel
-            </Link>
-            <ul className='pl-4 list-disc'>
-              <li>
-                <Link
-                  to='/admin/data-quality'
-                  className='block mt-4 lg:inline-block lg:mt-0 text-white hover:underline hover:font-medium mr-4'
-                >
-                  Data Quality
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to='/admin/evaluation'
-                  className='block mt-4 lg:inline-block lg:mt-0 text-white hover:underline hover:font-medium mr-4'
-                >
-                  Evaluation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to='/admin/production-evaluation'
-                  className='block mt-4 lg:inline-block lg:mt-0 text-white hover:underline hover:font-medium mr-4'
-                >
-                  Production Evaluation
-                </Link>
-              </li>
-            </ul>
+            <div className='relative inline-block text-left'>
+              <button
+                onClick={toggleAdminDropdown}
+                className='block mt-4 lg:inline-block lg:mt-0 text-white hover:underline hover:font-medium mr-4'
+              >
+                Admin Panel
+              </button>
+              {isAdminDropdownOpen && (
+                <ul className='absolute right-0 mt-2 w-48 bg-blue-700 rounded-md shadow-lg py-2 left-0'>
+                  <li className='px-4 py-2'>
+                    <Link
+                      to='/admin/data-quality'
+                      className='block text-sm text-white hover:underline'
+                      onClick={() => setIsAdminDropdownOpen(false)}
+                    >
+                      Data Quality
+                    </Link>
+                  </li>
+                  <li className='px-4 py-2'>
+                    <Link
+                      to='/admin/evaluation'
+                      className='block text-sm text-white hover:underline'
+                      onClick={() => setIsAdminDropdownOpen(false)}
+                    >
+                      Evaluation
+                    </Link>
+                  </li>
+                  <li className='px-4 py-2'>
+                    <Link
+                      to='/admin/production-evaluation'
+                      className='block text-sm text-white hover:underline'
+                      onClick={() => setIsAdminDropdownOpen(false)}
+                    >
+                      Production Evaluation
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </div>
           </div>
         </div>
       </div>
