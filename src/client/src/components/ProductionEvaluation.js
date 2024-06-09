@@ -21,14 +21,19 @@ ChartJS.register(
 
 function ProductionEvaluation() {
   const [metrics, setMetrics] = useState([]);
+  const [gettingPredictions, setGettingPredictions] = useState(false);
 
   useEffect(() => {
-    fetch(`https://${process.env.REACT_APP_SERVE_URL}/production-evaluation`)
+    setGettingPredictions(true);
+    fetch(`${process.env.REACT_APP_SERVE_URL}/production-evaluation`)
       .then((res) => res.json())
       .then((data) => {
+        setGettingPredictions(false);
+        console.log('data', data);
         setMetrics(data.metrics);
       })
       .catch((err) => {
+        setGettingPredictions(false);
         console.error('Error fetching metrics', err);
       });
   }, []);
@@ -36,15 +41,15 @@ function ProductionEvaluation() {
   // Extracting data for each metric
   const mseData = metrics.map((metric) => ({
     x: metric.end_time,
-    y: metric.MSE_production
+    y: metric.mse
   }));
   const evsData = metrics.map((metric) => ({
     x: metric.end_time,
-    y: metric.EVS_production
+    y: metric.evs
   }));
   const maeData = metrics.map((metric) => ({
     x: metric.end_time,
-    y: metric.MAE_production
+    y: metric.mae
   }));
 
   const reversedTimestamps = metrics
@@ -54,6 +59,7 @@ function ProductionEvaluation() {
   return (
     <div>
       <h2 className='text-2xl font-bold mb-4'>Production Evaluation</h2>
+      {gettingPredictions && <p>Loading metrics...</p>}
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         {/* MSE */}
         <div className='mb-8'>

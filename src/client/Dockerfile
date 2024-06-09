@@ -10,7 +10,7 @@ COPY . .
 
 RUN npm install
 
-ARG REACT_APP_SERVE_URL=p01--deploy-api--z7jwcpdkb6cf.code.run
+ARG REACT_APP_SERVE_URL=http://localhost:3000
 ENV REACT_APP_SERVE_URL=$REACT_APP_SERVE_URL
 
 RUN npm run build

@@ -40,7 +40,7 @@ export default function Header() {
                 Admin Panel
               </button>
               {isAdminDropdownOpen && (
-                <ul className='absolute right-0 mt-2 w-48 bg-blue-700 rounded-md shadow-lg py-2 left-0'>
+                <ul className='absolute right-0 mt-2 w-24 bg-blue-700 rounded-md shadow-lg py-2 left-0'>
                   <li className='px-4 py-2'>
                     <Link
                       to='/admin/data-quality'

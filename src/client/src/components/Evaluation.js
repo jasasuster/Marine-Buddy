@@ -21,14 +21,18 @@ ChartJS.register(
 
 function Evaluation() {
   const [metrics, setMetrics] = useState([]);
+  const [gettingPredictions, setGettingPredictions] = useState(false);
 
   useEffect(() => {
-    fetch(`https://${process.env.REACT_APP_SERVE_URL}/evaluation`)
+    setGettingPredictions(true);
+    fetch(`${process.env.REACT_APP_SERVE_URL}/evaluation`)
       .then((res) => res.json())
       .then((data) => {
+        setGettingPredictions(false);
         setMetrics(data.metrics);
       })
       .catch((err) => {
+        setGettingPredictions(false);
         console.error('Error fetching metrics', err);
       });
   }, []);
@@ -68,6 +72,7 @@ function Evaluation() {
   return (
     <div>
       <h2 className='text-2xl font-bold mb-4'>Evaluation</h2>
+      {gettingPredictions && <p>Loading metrics...</p>}
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         {/* MSE */}
         <div className='mb-8'>

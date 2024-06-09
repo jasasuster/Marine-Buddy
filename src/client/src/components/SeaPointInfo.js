@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Predictions from './Predictions';
 
 function SeaPointInfo() {
   const { seaPointId } = useParams();
@@ -31,7 +30,7 @@ function SeaPointInfo() {
         setIsLoadingPredictions(false);
       } else {
         setIsLoadingPredictions(true);
-        fetch(`https://${process.env.REACT_APP_SERVE_URL}/wave/${seaPoint.number.toString()}`, {
+        fetch(`${process.env.REACT_APP_SERVE_URL}/wave/${seaPoint.number.toString()}`, {
           method: 'POST',
         })
           .then((res) => res.json())
@@ -113,7 +112,7 @@ function SeaPointInfo() {
         <div>Loading predictions...</div>
       ) : (
         <div className='mt-4'>
-          <h3 className='text-xl font-bold mb-2'>Predictions:</h3>
+          <h3 className='text-xl font-bold mb-2'>Wave Height Predictions:</h3>
           {error ? (
             <div className='mt-4'>
               <p className='text-red-500'>Error: {error}</p>
@@ -134,7 +133,6 @@ function SeaPointInfo() {
           )}
         </div>
       )}
-      {/* <Predictions seaPointNumber={seaPoint} /> */}
     </div>
   );
 }

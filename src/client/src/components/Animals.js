@@ -15,7 +15,7 @@ function Animals() {
     const formData = new FormData();
     formData.append('image', selectedImage);
     setIsLoadingPredictions(true);
-    fetch(`https://${process.env.REACT_APP_SERVE_URL}/classification`, {
+    fetch(`${process.env.REACT_APP_SERVE_URL}/classification`, {
       method: 'POST',
       body: formData,
     })
@@ -37,7 +37,7 @@ function Animals() {
       <div className='flex'>
         <form>
           <input type='file' accept='image/*' onChange={handleImageChange} />
-          {selectedImage && <img src={URL.createObjectURL(selectedImage)} alt='Selected' />}
+          {selectedImage && <img src={URL.createObjectURL(selectedImage)} alt='Selected' style={{ maxHeight: '400px', marginTop: '16px' }} />}
           <br />
           <button
             type='button'

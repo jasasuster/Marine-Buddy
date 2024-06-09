@@ -83,7 +83,7 @@ def get_latest_model_metrics():
   try:
     client = mlflow.tracking.MlflowClient()
     experiment_id = "1"
-    runs = client.search_runs(experiment_ids=experiment_id, order_by=["attributes.end_time desc"])
+    runs = client.search_runs(experiment_ids=experiment_id, filter_string="tags.`mlflow.runName` = 'sea_point_1'", order_by=["attributes.end_time desc"])
     metrics_data_list = []
 
     for run in runs:
@@ -116,7 +116,7 @@ def get_production_metrics():
   try:
     client = mlflow.tracking.MlflowClient()
     experiment_id = "2"
-    runs = client.search_runs(experiment_ids=experiment_id, order_by=["attributes.end_time desc"])
+    runs = client.search_runs(experiment_ids=experiment_id, filter_string="tags.`mlflow.runName` = 'sea_point_1'", order_by=["attributes.end_time desc"])
     metrics_data_list = []
 
     for run in runs:
