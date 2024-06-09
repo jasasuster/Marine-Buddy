@@ -28,7 +28,7 @@ def main():
 
   tests.run(reference_data=reference, current_data=current)
 
-  tests.save_html("reports/sites/stability_tests.html")
+  tests.save_html("reports/sites/index.html")
 
   test_results = tests.as_dict()
 
