@@ -75,8 +75,8 @@ def download_all_models():
       joblib.dump(wave_scaler, os.path.join(sea_point_dir, 'wave_scaler.joblib'))
       joblib.dump(other_scaler, os.path.join(sea_point_dir, 'other_scaler.joblib'))
 
-  except:
-    print("Error getting models")
+  except IndexError as e:
+    print("Error getting models:", e)
     return None
   
 def get_latest_model_metrics():
@@ -89,22 +89,22 @@ def get_latest_model_metrics():
     for run in runs:
       metrics = run.data.metrics
       if all([
-        metrics.get("EVS_production") is not None,
-        metrics.get("MAE_production") is not None,
-        metrics.get("MSE_production") is not None,
-        metrics.get("EVS_staging") is not None,
-        metrics.get("MAE_staging") is not None,
-        metrics.get("MSE_staging") is not None
+        metrics.get("EVS production") is not None,
+        metrics.get("MAE production") is not None,
+        metrics.get("MSE production") is not None,
+        metrics.get("EVS staging") is not None,
+        metrics.get("MAE staging") is not None,
+        metrics.get("MSE staging") is not None
       ]):
         metrics_data_list.append({
           "run_id": run.info.run_id,
           "end_time": pd.to_datetime(run.info.end_time, unit='ms').isoformat(),
-          "EVS_production": metrics.get("EVS_production"),
-          "MAE_production": metrics.get("MAE_production"),
-          "MSE_production": metrics.get("MSE_production"),
-          "EVS_staging": metrics.get("EVS_staging"),
-          "MAE_staging": metrics.get("MAE_staging"),
-          "MSE_staging": metrics.get("MSE_staging")
+          "EVS_production": metrics.get("EVS production"),
+          "MAE_production": metrics.get("MAE production"),
+          "MSE_production": metrics.get("MSE production"),
+          "EVS_staging": metrics.get("EVS staging"),
+          "MAE_staging": metrics.get("MAE staging"),
+          "MSE_staging": metrics.get("MSE staging")
         })
 
     return metrics_data_list

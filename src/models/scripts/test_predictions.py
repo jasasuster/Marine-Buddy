@@ -26,6 +26,7 @@ def test_predictions(station_number, sea_point_data, database_manager):
     sea_point_data = sea_point_data.set_index('timestamp')
     for i, pred in enumerate(predictions_hourly):
       target_time = date + timedelta(hours=i)
+      target_time = target_time.to_pydatetime().timestamp()
       nearest_timestamp_index = sea_point_data.index.get_indexer([target_time], method='nearest')[0]
       nearest_timestamp_sea_data = sea_point_data.iloc[nearest_timestamp_index].to_dict()
       mapped_predictions.append({
@@ -55,7 +56,7 @@ def main():
 
   for sea_point_number in range(1, 11):
     print(f"---------- Testing sea point {sea_point_number} ----------")
-    sea_point_data = pd.read_csv(f"./data/processed/{sea_point_number}.csv")
+    sea_point_data = pd.read_csv(f"./data/processed/sea_point_{sea_point_number}.csv")
     sea_point_data.sort_values(by='timestamp', inplace=True)
     sea_point_data.drop_duplicates(subset='timestamp', inplace=True)
     sea_point_data.reset_index(inplace=True)

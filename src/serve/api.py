@@ -17,6 +17,8 @@ def create_app(image_processor, image_model):
   @app.route('/wave/<int:sea_point_number>', methods=['POST'])
   def predict_val(sea_point_number):
     try:
+      if sea_point_number < 1 or sea_point_number > 10:
+        return {'error': 'Invalid sea point number'}, 400
       predictions = predict(sea_point_number)
       database_manager.insert_prediction(f"sea_point_{sea_point_number}", {'predictions': predictions, 'date': datetime.now()})
 
